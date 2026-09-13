@@ -33,20 +33,24 @@ templates/     BRIEF.md, HANDOFF.md, cut-list worker brief, series.json config
 
 ### Claude Code
 
-Clone the repo and copy this skill's folder into your skills directory:
+```sh
+npx skills add captainjry/yooners --skill dji-vlog-series -g -a claude-code
+```
+
+Omit `-g` to scope it to the current project. Without Node, copy the folder by hand:
 
 ```sh
 git clone https://github.com/captainjry/yooners
 cp -r yooners/skills/dji-vlog-series ~/.claude/skills/
 ```
 
-Use `.claude/skills/` inside a project instead to scope it to that project. Then ask Claude to
+Then ask Claude to
 "turn this footage folder into a vlog series", or type `/dji-vlog-series`.
 
 ### Other agents
 
 `SKILL.md` uses the open Agent Skills format (YAML frontmatter plus markdown), so any agent that
-loads skills can use it; otherwise point your agent at `SKILL.md` as instructions. A few parts
+loads skills can use it: swap `-a claude-code` for your agent (`npx skills --help` lists them). Otherwise point your agent at `SKILL.md` as instructions. A few parts
 assume Claude Code:
 
 | Part | Claude Code | Elsewhere |
