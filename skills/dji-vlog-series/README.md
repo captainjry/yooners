@@ -31,26 +31,22 @@ templates/     BRIEF.md, HANDOFF.md, cut-list worker brief, series.json config
 
 ## Install
 
-### Claude Code
-
 ```sh
-npx skills add captainjry/yooners --skill dji-vlog-series -g -a claude-code
+npx skills add captainjry/yooners --skill dji-vlog-series -g -a <agent>
 ```
 
-Omit `-g` to scope it to the current project. Without Node, copy the folder by hand:
+`<agent>` is `claude-code`, `codex`, `cursor`, `gemini-cli`, `github-copilot`, `opencode`,
+`windsurf`, or any other agent the CLI supports; list several to install for each. Omit `-g` to scope
+it to the current project. See the [root README](../../README.md#install) for skills folders and a
+manual install without Node.
 
-```sh
-git clone https://github.com/captainjry/yooners
-cp -r yooners/skills/dji-vlog-series ~/.claude/skills/
-```
+Then ask your agent to "turn this footage folder into a vlog series". In Claude Code you can also type
+`/dji-vlog-series`.
 
-Then ask Claude to
-"turn this footage folder into a vlog series", or type `/dji-vlog-series`.
+### Agents other than Claude Code
 
-### Other agents
-
-`SKILL.md` uses the open Agent Skills format (YAML frontmatter plus markdown), so any agent that
-loads skills can use it: swap `-a claude-code` for your agent (`npx skills --help` lists them). Otherwise point your agent at `SKILL.md` as instructions. A few parts
+`SKILL.md` uses the open Agent Skills format (YAML frontmatter plus markdown), so any agent that loads
+skills runs it; an agent without skills support can read `SKILL.md` as plain instructions. A few parts
 assume Claude Code:
 
 | Part | Claude Code | Elsewhere |
