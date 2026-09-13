@@ -1,0 +1,54 @@
+{
+  "_readme": "Config for scripts/build_episodes.py and scripts/build_thumbnails.py. Copy to the project root, fill in, and pass with --config. Relative paths resolve against this file.",
+
+  "project": ".",
+  "cut_lists": "../<project>-review/clip-review",
+  "frame_index": "../<project>-review/frame-index.json",
+  "stamps": "tools/stamps.json",
+  "gsap": "assets/gsap.min.js",
+
+  "slug": "Series-2026",
+  "lang": "en",
+  "fps": 25,
+  "canvas": [1920, 1080],
+  "handle": 1.0,
+
+  "episodes": {
+    "01": {"title": "<episode title>", "batch": "<date label, e.g. 14-15 FEB>"},
+    "02": {"title": "<episode title>", "batch": "<date label>"}
+  },
+
+  "bed": {"01": "<bgm stem>", "02": "<bgm stem>"},
+  "bed_dir": "assets/bgm",
+  "bed_ext": ".m4a",
+  "bed_title_level": 0.45,
+  "bed_ramp": 0.6,
+  "bed_level": {"keep": 0.10, "duck": 0.20, "music-only": 0.45},
+  "shot_volume": {"keep": 1.0, "duck": 0.6, "music-only": 0.3},
+  "shot_edge_fade": 0.12,
+
+  "title_hold": 4.2,
+  "stamp_hold": 3.2,
+  "end_hold": 3.0,
+
+  "design": {
+    "paper": "#F5F1E8",
+    "ink": "#25302D",
+    "accent": "#6A4432",
+    "rule": "#C9A88F",
+    "sans": "\"Montserrat\",sans-serif",
+    "mono": "\"IBM Plex Mono\",monospace"
+  },
+
+  "text": {
+    "series_line": "<SERIES> · <MONTH YEAR>",
+    "first_series_line": "<SERIES LONG FORM> · <MONTH YEAR>",
+    "end_sub": "{batch} · <SERIES> <YEAR>",
+    "end_last": "<the closing line of the series>",
+    "end_last_sub": "<SERIES> · <MONTH YEAR> · THE END",
+    "credit": "MUSIC · <ARTIST> (<SOURCE>) · <LICENCE>",
+    "thumb_eyebrow": "<SERIES> · EP.{n} OF {total}"
+  },
+
+  "per_shot_dir": "assets/clips/<episode>-shots"
+}
