@@ -84,7 +84,7 @@ The transcript is what turns a visual index into an editorial one: it is the onl
 who said what, so it decides which shots carry a beat, and its word timestamps drive both the
 cut in/out points and the subtitle sidecars. Two fields matter downstream:
 `no_speech_prob > 0.6` marks a segment as unreliable, and degenerate repeats (four-plus tokens
-with two or fewer distinct) are ASR hallucinations. Both get filtered at steps 5 and 8.
+with two or fewer distinct) are ASR hallucinations. Both get filtered at steps 5 and 7.
 
 Expect three hallucination shapes on silent or windy clips and keep a per-series fix list for the
 subtitle build (`--fix "text=>"` deletes a cue): stock filler in the wrong language ("Thank you.",

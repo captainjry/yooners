@@ -1,10 +1,9 @@
 #!/bin/sh
-# Step 11: QC one finished file and write the evidence beside it.
+# Step 10: QC one finished file and write the evidence beside it.
 # Checks geometry, duration, black frames, freezes, silence and loudness, plus a contact sheet.
 #
 #   sh qc_episode.sh <final>.mp4 [--expect-duration 405.8] [--expect-size 3840x2160] [--qc <dir>]
 #
-# Run this only while nothing is rendering: concurrent ffmpeg has stalled captures.
 # The contact sheet is the check that catches what the filters miss - LOOK at the PNG afterwards.
 set -e
 F="$1"; shift || true

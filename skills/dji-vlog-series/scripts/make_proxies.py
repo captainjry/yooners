@@ -7,16 +7,14 @@ Read-only on the originals.
       --no-autorotate 0035,0064,0134,0141,0143,0146,0156
 
 Output: <out>/<clip-stem>.mp4 plus <out>/_ranges.json mapping each clip to its proxy offset, so a
-composition's data-media-start = source_time - offset. One proxy per source file spanning
+render's source time = proxy_time + offset. One proxy per source file spanning
 min(in)-handle .. max(out)+handle across EVERY use in the series, so a clip shared by two episodes
 stays one file. Re-runs skip proxies that already cover their range.
 
-Encode notes that matter (see reference/build.md):
-  -g/-keyint_min = fps  -> a keyframe every second. NVENC's 10 s default makes the HyperFrames
-                           compiler warn "sparse keyframes ... seek failures and frame freezing".
+Encode notes that matter (see reference/build.md): the proxy exists to normalise geometry, fps
+and rotation, and to make the HEVC originals cheap to seek.
   --no-autorotate      -> clip numbers whose rotation tag is wrong for landscape content.
   scale+pad+setsar     -> the proxy is already the render geometry.
-Point <project>/assets/clips at --out with a directory junction / symlink afterwards.
 """
 import argparse, json, os, subprocess, time
 from pathlib import Path
@@ -30,12 +28,14 @@ AP.add_argument("--size", default="4k", choices=["4k", "1080p", "custom"])
 AP.add_argument("--width", type=int, default=0)
 AP.add_argument("--height", type=int, default=0)
 AP.add_argument("--fps", type=int, default=25)
+AP.add_argument("--gop", type=int, default=0, help="keyframe interval; default 2*fps")
 AP.add_argument("--handle", type=float, default=1.0, help="seconds of padding each side")
 AP.add_argument("--no-autorotate", default="", help="comma-separated clip numbers with a wrong rotation tag")
 AP.add_argument("--ffmpeg", default="ffmpeg")
 AP.add_argument("--clip-number-field", type=int, default=2,
                 help="index of the clip number when the filename is split on '_' (DJI_<date>_<NNNN>_D)")
 A = AP.parse_args()
+A.gop = A.gop or 2 * A.fps
 
 W, H = ({"4k": (3840, 2160), "1080p": (1920, 1080)}.get(A.size) or (A.width, A.height))
 MAXRATE, BUF = ("60M", "120M") if W >= 3000 else ("16M", "32M")
@@ -73,20 +73,17 @@ for i, (f, (lo, hi)) in enumerate(sorted(used.items()), 1):
               "-map", "0:v:0", "-map", "0:a:0", "-vf", vf, "-r", str(A.fps)]
     tail = ["-pix_fmt", "yuv420p", "-c:a", "aac", "-b:a", "192k", "-ar", "48000",
             "-movflags", "+faststart", str(dst)]
-    gpu = ["-c:v", "h264_nvenc", "-preset", "p5", "-g", str(A.fps), "-keyint_min", str(A.fps),
-           "-bf", "0", "-rc", "vbr", "-cq", "21", "-b:v", "0", "-maxrate", MAXRATE, "-bufsize", BUF]
-    cpu = ["-c:v", "libx264", "-preset", "fast", "-crf", "20", "-g", str(A.fps),
-           "-keyint_min", str(A.fps), "-bf", "0"]
+    gpu = ["-c:v", "h264_nvenc", "-preset", "p5", "-g", str(A.gop),
+           "-rc", "vbr", "-cq", "21", "-b:v", "0", "-maxrate", MAXRATE, "-bufsize", BUF]
+    cpu = ["-c:v", "libx264", "-preset", "fast", "-crf", "20", "-g", str(A.gop)]
     r = subprocess.run(args + common + gpu + tail, capture_output=True, text=True)
     if r.returncode != 0:                     # a few clips reject the GPU path; fall back
         r = subprocess.run(args + common + cpu + tail, capture_output=True, text=True)
         if r.returncode != 0:
             print("FAILED", f, r.stderr[-400:], flush=True); continue
     ranges[stem] = {"file": f, "offset": round(start, 3), "end": round(end, 3),
-                    "proxy": f"assets/clips/{stem}.mp4", "size": f"{W}x{H}"}
+                    "size": f"{W}x{H}"}
     json.dump(ranges, open(OUT / "_ranges.json", "w", encoding="utf-8"), indent=1)
     print(f"[{i}/{len(used)}] {f} {start:.1f}-{end:.1f}s {os.path.getsize(dst)/1e6:.0f}MB "
           f"elapsed={time.time()-t0:.0f}s", flush=True)
 print("DONE", len(ranges))
-print("VERIFY: ffprobe -v error -select_streams v:0 -show_entries frame=key_frame "
-      '-of csv=p=0 -read_intervals "%+#60" <a proxy>  ->  expect >= 2 keyframes')

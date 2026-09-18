@@ -1,5 +1,5 @@
 #!/bin/sh
-# Step 11: two-pass linear loudnorm on the audio only; the video stream is copied.
+# Step 10: two-pass linear loudnorm on the audio only; the video stream is copied.
 # Needed because the pipeline has no normalization stage: each episode's level is whatever its
 # per-shot volume automation produced, and unnormalized finals measured -17.7 to -25 LUFS.
 #

@@ -1,11 +1,12 @@
 {
-  "_readme": "Config for scripts/build_episodes.py and scripts/build_thumbnails.py. Copy to the project root, fill in, and pass with --config. Relative paths resolve against this file.",
+  "_readme": "Config for scripts/build_episodes.py and scripts/build_thumbnails.py. Copy to the project root, fill in, and pass with --config. Relative paths resolve against this file. Text sizes in `design` are canvas pixels tuned for 4K; set text_scale 0.5 for 1080p.",
 
   "project": ".",
   "cut_lists": "../<project>-review/clip-review",
   "frame_index": "../<project>-review/frame-index.json",
   "stamps": "tools/stamps.json",
-  "gsap": "assets/gsap.min.js",
+  "proxies": "../<project>-media/clips-4k",
+  "output": "../<project>-media/final",
 
   "slug": "Series-2026",
   "lang": "en",
@@ -36,8 +37,12 @@
     "ink": "#25302D",
     "accent": "#6A4432",
     "rule": "#C9A88F",
-    "sans": "\"Montserrat\",sans-serif",
-    "mono": "\"IBM Plex Mono\",monospace"
+    "fonts": {
+      "sans": "assets/fonts/Montserrat[wght].ttf",
+      "mono": "assets/fonts/IBMPlexMono-Regular.ttf",
+      "sans_weight": 700
+    },
+    "text_scale": 1.0
   },
 
   "text": {
@@ -48,7 +53,5 @@
     "end_last_sub": "<SERIES> · <MONTH YEAR> · THE END",
     "credit": "MUSIC · <ARTIST> (<SOURCE>) · <LICENCE>",
     "thumb_eyebrow": "<SERIES> · EP.{n} OF {total}"
-  },
-
-  "per_shot_dir": "assets/clips/<episode>-shots"
+  }
 }

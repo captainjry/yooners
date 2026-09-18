@@ -1,14 +1,14 @@
-# QC — step 11
+# QC — step 10
 
-Run QC only while nothing is rendering. Concurrent ffmpeg has stalled captures.
-
-QC an episode as soon as it is joined and hand it over clean; the user uploads one at a time, so
-a clean episode delivered now beats ten delivered together. Parts of one episode render back to
-back under the batch script; QC follows the join, not each part.
+QC an episode as soon as it renders PASS and hand it over clean; the user uploads one at a time,
+so a clean episode delivered now beats ten delivered together.
 
 ## Per-file block
 
 `sh scripts/qc_episode.sh <final>.mp4 --expect-duration 405.8 --expect-size 3840x2160`
+
+`--expect-duration` is `total_seconds` from the episode's `eNN.chapters.json`, written by the
+render.
 
 | Check | Command | Expected |
 |---|---|---|
@@ -19,8 +19,8 @@ back under the batch script; QC follows the join, not each part.
 | loudness | `ebur128=peak=true` | I ≈ −20 LUFS, true peak < −1 dBFS |
 | text luminance | `python <social-reel>/scripts/text_luminance.py --video <final> --at <t> --band x0,y0,x1,y1` on one stamped frame | brightest pixel 255 for white type |
 
-A freeze anywhere but the end card, or a black run, means a stalled capture wrote a repeated
-frame — re-render rather than patching.
+A freeze anywhere but the end card, or a black run, is a bad source range rather than an encode
+fault: find the shot in the cut list, fix it there, re-render.
 
 ## Look at the contact sheet
 
@@ -36,7 +36,7 @@ when `duration / 20 < 21`, not missing footage.
 ## Loudness normalization
 
 Loudness came out inconsistent across the series — −17.7 to −25 LUFS — because the pipeline has no
-normalization stage: each episode's level is whatever its per-shot volume automation produced.
+normalization stage: each episode's level is whatever its shot gains and bed envelope produced.
 Normalize as a separate pass:
 
 `sh scripts/normalize_loudness.sh <final>.mp4 --target -20 --tp -1.5 --lra 14`

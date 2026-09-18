@@ -1,4 +1,4 @@
-"""Step 8: subtitle sidecars (SRT) per episode, remapped from the source transcripts through the cut.
+"""Step 7: subtitle sidecars (SRT) per episode, remapped from the source transcripts through the cut.
 
 Sidecars, not burned-in: YouTube can then translate them and the picture stays clean.
 

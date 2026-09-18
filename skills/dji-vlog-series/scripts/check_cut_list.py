@@ -1,6 +1,6 @@
 """Step 5: validate one episode's cut list before accepting it from a worker.
 
-  python check_cut_list.py --review <review> --plan <project>/storyboard-plan.json 01 --target 330
+  python check_cut_list.py --review <review> --plan <review>/storyboard/storyboard-plan.json 01 --target 330
 
 Checks, in order: the beat cards match the approved storyboard (same ids, same order); every
 shot's file is in frame-index.json; every out-point is inside its clip; in < out; audio mode is

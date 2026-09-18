@@ -7,7 +7,7 @@ under `skills/` with a `SKILL.md` (the instructions an agent follows) and its ow
 
 | Skill | What it does |
 |---|---|
-| [dji-vlog-series](skills/dji-vlog-series) | Turn a folder of raw camera clips into a multi-episode travel-vlog series plus a vertical teaser: indexing, storyboard, cut lists, 4K renders, QC, and a YouTube upload sheet. |
+| [dji-vlog-series](skills/dji-vlog-series) | Turn a folder of raw camera clips into a multi-episode travel-vlog series plus a vertical teaser: indexing, storyboard, cut lists, ffmpeg renders, QC, and a YouTube upload sheet. |
 
 ## Install
 

@@ -1,4 +1,4 @@
-# Publish sheet — step 12
+# Publish sheet — step 11
 
 Uploading is the user's step. The deliverable here is a sheet they can paste from without
 thinking, so every box on the upload page has exactly one block in the file.
@@ -27,8 +27,9 @@ runtime and bed name:
 - **`[DESCRIPTION]`** — a short paragraph in the diary's own voice, then chapter timestamps (one
   per beat, `M:SS Beat name · Place`), then the series line, then
   `Original audio throughout. <Language> captions available (CC).`, then the music credit with the
-  licence URL, then hashtags. Chapter times come from the cut list's cumulative beat seconds and
-  must match the rendered file — check the first and last against the video.
+  licence URL, then hashtags. Chapter times come from the episode's
+  `eNN.chapters.json` (`beats[].start_seconds` with its `card` and `stamp`), which the render wrote
+  off the same frame grid as the file.
 - **`[TAGS]`** — places first, then the day, then the series and generic travel tags, in both
   languages. One comma-separated line.
 

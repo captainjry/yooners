@@ -1,16 +1,3 @@
----
-workflow: general-video
-flow: companion
-storyboard: yes
-message: "<the one sentence the series is about>"
-aspect: <working canvas, e.g. 1920x1080>
-language: <label language>
-audience: <who this is for>
-length: <per-episode target, and the exception policy>
-angle: <the shape of the series in one line>
-narration: no
----
-
 # BRIEF — <series>
 
 Copy this into the project root. It is the **single source of truth** across sessions: a new
@@ -29,8 +16,14 @@ corrected as corrections, so no later session re-proposes the rejected shape.>
 - `<review>/source-metadata.json` — metadata for all N files (step 1).
 - `<review>/complete-visual-index.json` — visual index (step 2).
 - `<review>/transcripts/` — per-clip transcripts (step 3).
+- `<review>/storyboard/` — plan, stills, provenance, `strip.html` (step 4).
 - `<review>/clip-review/eNN.json` — per-episode cut lists (step 5).
-- `<media>/` — proxies and finals. `<project>/assets/clips` is a junction to the proxy set.
+- `<project>/series.json` — the config every render tool reads: paths, design, text, bed levels.
+- `<media>/<proxy set>/` — proxies plus `_ranges.json` (step 6).
+- `<project>/assets/fonts/` — the two OFL faces; `<project>/assets/bgm/` — the chosen beds.
+- `<project>/layers/eNN/` — the text-layer PNGs the render overlays.
+- `<media>/final/` — finals, `eNN.chapters.json`, `thumbnails/`, `qc/`, `YOUTUBE.txt`;
+  `<media>/final/draft/` — the lock-gate drafts.
 
 ## Customizations
 

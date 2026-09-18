@@ -1,4 +1,4 @@
-"""Step 13 helper: measure a music bed's tempo, beat period and 4/4 downbeat phase.
+"""Step 12 helper: measure a music bed's tempo, beat period and 4/4 downbeat phase.
 
 The teaser cut is locked to the music, so the grid is measured rather than guessed
 (the social-reel skill, reference/audio-modes.md).
