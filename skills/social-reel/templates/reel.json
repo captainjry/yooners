@@ -1,0 +1,33 @@
+{
+  "_readme": "Config for scripts/build_reel.py. Copy beside cuts.json in the reel's own project folder. Relative paths resolve against this file.",
+
+  "proxies": "<dir of proxies | omit and use \"source\": \"<bare clip folder>\">",
+  "output": "out/<slug>.mp4",
+  "canvas": [1080, 1920],
+  "fps": 25,
+  "cuts": "cuts.json",
+
+  "lockup": {
+    "lines": [
+      {"text": "<TITLE LINE>", "font": "serif", "size": 84, "tracking": 2},
+      {"text": "<PLACE · DATE>", "font": "mono", "size": 26, "tracking": 4}
+    ],
+    "position": "top",
+    "top_px": 220,
+    "color": "#F5F1E8",
+    "shadow": [0, 2, 18, 0.5]
+  },
+
+  "audio": {
+    "mode": "silent",
+    "_bed_mode": "{\"mode\": \"bed\", \"bed\": \"assets/bgm/<stem>.m4a\", \"gain\": 1.0, \"fade_out\": 1.0}"
+  },
+
+  "design": {
+    "fonts": {
+      "sans": "<dji-vlog-series project>/assets/fonts/Montserrat[wght].ttf",
+      "mono": "<dji-vlog-series project>/assets/fonts/IBMPlexMono-Regular.ttf",
+      "serif": "<optional serif TTF path — leave unset to use sans/mono only>"
+    }
+  }
+}

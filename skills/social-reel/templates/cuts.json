@@ -1,0 +1,6 @@
+{
+  "shots": [
+    {"file": "<proxy file>.mp4", "in": 63.8, "out": 65.4, "x_offset": -300, "_note": "wide, person small — lockup lands here"},
+    {"file": "<proxy file>.mp4", "in": 1.0, "out": 2.6, "_note": "no x_offset = centred crop"}
+  ]
+}

@@ -55,7 +55,8 @@ class Design:
         self.sans_path = str((base / fonts.get("sans", "assets/fonts/Montserrat[wght].ttf")).resolve())
         self.mono_path = str((base / fonts.get("mono", "assets/fonts/IBMPlexMono-Regular.ttf")).resolve())
         self.sans_weight = float(fonts.get("sans_weight", 700))
-        for p in (self.sans_path, self.mono_path):
+        self.serif_path = str((base / fonts["serif"]).resolve()) if fonts.get("serif") else None
+        for p in (self.sans_path, self.mono_path) + ((self.serif_path,) if self.serif_path else ()):
             if not os.path.exists(p):
                 raise SystemExit(f"font missing: {p}  (run scripts/fetch_fonts.py or set design.fonts)")
         self._cache = {}
@@ -66,7 +67,12 @@ class Design:
     def font(self, kind, size):
         key = (kind, round(size, 2))
         if key not in self._cache:
-            path = self.sans_path if kind == "sans" else self.mono_path
+            if kind == "serif":
+                if not self.serif_path:
+                    raise SystemExit("design.fonts.serif not set")
+                path = self.serif_path
+            else:
+                path = self.sans_path if kind == "sans" else self.mono_path
             f = ImageFont.truetype(path, int(round(size)))
             if kind == "sans":
                 try:
@@ -238,6 +244,37 @@ def render_thumb(D, still_path, eyebrow, title, size=(1280, 720)):
     paste_block(img, t_layer, t_h, D.d["thumb_side"], bottom)
     paste_block(img, e_layer, e_h, D.d["thumb_side"], bottom + t_h + D.d["thumb_eyebrow_gap"])
     return img.convert("RGB")
+
+
+def render_lockup(D, canvas, lines, position, top_px, color, shadow):
+    """Static text lockup for social-reel: N lines, each its own font kind/size/tracking, one
+    shared fill colour and shadow, centred horizontally and stacked with no gap between lines'
+    own leading. Never animated - present for the reel's full length.
+
+    lines: [{"text":..., "font": "sans"|"mono"|"serif", "size": px, "tracking": px}, ...]
+    position: "top" (block's top edge sits `top_px` down from the canvas top) or "centre"
+    (block vertically centred). shadow = (dx, dy, blur, alpha) or None."""
+    W, H = canvas
+    fill = rgb(color)
+    sh = tuple(shadow) if shadow else None
+    blocks = []
+    for ln in lines:
+        size = ln["size"] * D.scale
+        tracking = ln.get("tracking", 0) * D.scale
+        f = D.font(ln.get("font", "sans"), size)
+        text = ln["text"]
+        w = text_width(f, text, tracking)
+        layer, h = shadowed_block((int(w) + 40, int(f.size * 1.3)), [text], f, tracking, 1.0,
+                                  fill, sh, align="center")
+        blocks.append((layer, h))
+    total_h = sum(h for _, h in blocks)
+    img = Image.new("RGBA", canvas, (0, 0, 0, 0))
+    y = top_px * D.scale if position == "top" else (H - total_h) / 2
+    for layer, h in blocks:
+        lw, _ = layer.size
+        img.alpha_composite(layer, (int(round((W - lw) / 2)), int(round(y))))
+        y += h
+    return img
 
 
 if __name__ == "__main__":
