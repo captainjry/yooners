@@ -58,6 +58,9 @@ every class is from the table; the SVG carries no `fill`, `stroke` or `style` at
 render the page once and look at each new map: the route line is readable, no label sits under
 a marker, and nothing renders black (an unknown class).
 
+`python scripts/check_run_book.py <file>` checks everything in the first sentence except the
+parse; the rendered look is yours.
+
 ## When a map cannot be drawn
 
 Some areas resist a diagram: a single open field, a maze the sources never describe, a

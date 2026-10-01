@@ -9,7 +9,11 @@
   Components: card · ol.steps (.why/.cost) · note / note.warn / note.info · tablewrap table ·
   pill take/skip/hot/wpn · quest block · figure diagram (dgm-* classes) · grid2/grid3 ·
   chip / chip.you · Navigator: picker + section.area (div.map svg + ol.stops), drawn per
-  reference/area-maps.md.
+  reference/area-maps.md · tick (input[data-t], counted by [data-count] inside [data-ticks]) ·
+  where-list (table[data-total], one row per unit) · span.spoil · details.ticks-io.
+  TICKS: one thing has one data-t id, "<area>-<short-name>", kept for the life of the page. The
+  same id on a stop, a where-list row and a quest step is one tick shown three times. The slug
+  on main[data-slug] prefixes every saved key.
   Every .note.info starting <strong>Your run:</strong> is player-specific; everything else is
   true for any player.
 -->
@@ -144,12 +148,12 @@ td.num,th.num{font-family:"IBM Plex Mono",monospace;font-variant-numeric:tabular
 .pill.wpn{color:var(--brass);border-color:color-mix(in srgb,var(--brass) 45%,transparent);background:var(--brass-soft)}
 
 ol.steps{list-style:none;counter-reset:s;margin:0;padding:0;display:flex;flex-direction:column;gap:0}
-ol.steps li{counter-increment:s;display:grid;grid-template-columns:38px 1fr auto;gap:14px;padding:11px 0;border-bottom:1px solid var(--line-soft);align-items:baseline}
+ol.steps li{counter-increment:s;display:grid;grid-template-columns:38px minmax(0,1fr) auto;gap:14px;padding:11px 0;border-bottom:1px solid var(--line-soft);align-items:baseline}
 ol.steps li:last-child{border-bottom:0}
 ol.steps li::before{content:counter(s,decimal-leading-zero);font-family:"IBM Plex Mono",monospace;font-size:12px;color:var(--brass);font-variant-numeric:tabular-nums}
 ol.steps .why{display:block;color:var(--muted);font-size:14px;max-width:56ch}
 ol.steps .cost{font-family:"IBM Plex Mono",monospace;font-size:12.5px;color:var(--muted);font-variant-numeric:tabular-nums;white-space:nowrap}
-@media (max-width:520px){ol.steps li{grid-template-columns:30px 1fr}ol.steps .cost{grid-column:2}}
+@media (max-width:520px){ol.steps li{grid-template-columns:30px minmax(0,1fr)}ol.steps .cost{grid-column:2}}
 
 ul.plain{margin:0;padding-left:1.15em;display:flex;flex-direction:column;gap:7px}
 ul.plain li{max-width:66ch}
@@ -225,7 +229,7 @@ figcaption{font-size:13.5px;color:var(--muted);max-width:72ch;line-height:1.6}
 .legend i.sq{border-radius:0;height:5px;vertical-align:2px}
 
 ol.stops{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;min-width:0;border-top:1px solid var(--line)}
-ol.stops li{display:grid;grid-template-columns:30px minmax(0,1fr) auto;gap:12px;align-items:baseline;padding:9px 8px;border-bottom:1px solid var(--line)}
+ol.stops li{display:grid;grid-template-columns:30px minmax(0,1fr) auto auto;gap:12px;align-items:baseline;padding:9px 8px;border-bottom:1px solid var(--line)}
 ol.stops li.on{background:var(--brass-soft)}
 ol.stops .n{font-family:"IBM Plex Mono",ui-monospace,monospace;font-size:12px;width:22px;height:22px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;color:var(--bg);align-self:start;margin-top:3px}
 ol.stops b{font-weight:600;font-size:18.5px}
@@ -234,6 +238,24 @@ ol.stops .tag{font-family:"IBM Plex Mono",ui-monospace,monospace;font-size:10.5p
 ol.stops .tag.hot{color:var(--danger)}
 .n.k-route{background:var(--ink)} .n.k-rest{background:var(--brass)} .n.k-loot{background:var(--item)}
 .n.k-npc{background:var(--info)} .n.k-boss{background:var(--danger);color:var(--ink)} .n.k-exit{background:var(--ok)}
+
+/* ---- Ticks, spoiler gate ---- */
+input[data-t]{width:18px;height:18px;margin:0;accent-color:var(--brass);cursor:pointer;vertical-align:-3px}
+li.done,tr.done{opacity:.5}
+li.done b,tr.done .name{text-decoration:line-through}
+.mk.done{opacity:.3}
+.count{font-family:"IBM Plex Mono",ui-monospace,monospace;font-size:12px;font-weight:400;color:var(--muted);font-variant-numeric:tabular-nums;margin-left:8px}
+td.ck,th.ck{width:34px}
+ol.qsteps{margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:6px}
+ol.qsteps label{display:flex;gap:10px;align-items:baseline;cursor:pointer}
+ol.qsteps .by{color:var(--muted);font-size:13.5px}
+.spoil{background:var(--line-soft);border-radius:2px;padding:0 4px;color:transparent;text-shadow:0 0 8px var(--ink);cursor:pointer}
+.spoil.open{color:inherit;text-shadow:none;background:var(--brass-soft)}
+.spoil:focus-visible{outline:2px solid var(--info);outline-offset:2px}
+.ticks-io{margin-bottom:14px}
+.ticks-io summary{cursor:pointer}
+.ticks-io textarea{display:block;width:100%;margin:10px 0 8px;font-family:"IBM Plex Mono",ui-monospace,monospace;font-size:12px;background:var(--paper);color:var(--ink);border:1px solid var(--line);padding:8px}
+.ticks-io button{font-family:"IBM Plex Mono",ui-monospace,monospace;font-size:12px;background:var(--paper);color:var(--ink);border:1px solid var(--line);padding:6px 10px;cursor:pointer}
 </style>
 
 <svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
@@ -292,6 +314,7 @@ ol.stops .tag.hot{color:var(--danger)}
   <div class="tabbar-inner" role="tablist" aria-label="Guide sections">
     <button class="tab" role="tab" id="t-now" aria-controls="p-now" aria-selected="true">Now</button>
     <button class="tab" role="tab" id="t-nav" aria-controls="p-nav" aria-selected="false">Navigator</button>
+    <button class="tab" role="tab" id="t-know" aria-controls="p-know" aria-selected="false">Untaught</button>
     <button class="tab" role="tab" id="t-build" aria-controls="p-build" aria-selected="false">Build</button>
     <button class="tab" role="tab" id="t-budget" aria-controls="p-budget" aria-selected="false">Budgets</button>
     <button class="tab" role="tab" id="t-fork" aria-controls="p-fork" aria-selected="false">Forks</button>
@@ -301,7 +324,7 @@ ol.stops .tag.hot{color:var(--danger)}
   </div>
 </nav>
 
-<main class="wrap">
+<main class="wrap" data-slug="{{SLUG}}">
 <!-- ================= NOW ================= -->
 <section class="panel stack-lg" id="p-now" role="tabpanel" aria-labelledby="t-now">
   <div class="stack">
@@ -312,6 +335,18 @@ ol.stops .tag.hot{color:var(--danger)}
   <div class="card">
     <span class="kicker blue"><svg class="ico-sm" aria-hidden="true"><use href="#m-key"/></svg>YOUR RUN · {{POSITION}}</span>
     <p>{{POSITION_PARAGRAPH}}</p>
+
+    <!-- position "not started" only: locked rows first; drop this block once the run has begun -->
+    <h3>Before the first save</h3>
+    <div class="tablewrap">
+      <table>
+        <thead><tr><th>Setting</th><th>Pick</th><th>Changeable later?</th></tr></thead>
+        <tbody>
+          <tr><td class="name">{{SETTING}}</td><td>{{SETTING_PICK}}</td><td><span class="pill hot">Locked for this save</span></td></tr>
+          <tr><td class="name">{{SETTING}}</td><td>{{SETTING_PICK}}</td><td><span class="pill take">Any time</span></td></tr>
+        </tbody>
+      </table>
+    </div>
 
     <h3>Do now, before {{NEXT_LOCK}}</h3>
     <ol class="steps">
@@ -348,9 +383,9 @@ ol.stops .tag.hot{color:var(--danger)}
 
   <!-- one section.area per area, in play order; every area but the player's current one carries `hidden`.
        An area whose map is not drawn yet uses class="area nomap" and has no div.map. -->
-  <section class="area" id="area-01" data-area="01">
+  <section class="area" id="area-01" data-area="01" data-ticks>
     <div class="area-head">
-      <span class="num">AREA 01</span>
+      <span class="num">AREA 01 <span class="count" data-count></span></span>
       <h3>{{AREA_NAME}}</h3>
       <span class="sub">Enter: {{CHECKPOINT}} · Exit: {{NEXT_AREA}}</span>
     </div>
@@ -388,14 +423,26 @@ ol.stops .tag.hot{color:var(--danger)}
         <div class="later"><b>Later</b>{{EXITS_TO_LEAVE}}</div>
       </div>
       <ol class="stops">
-        <li data-n="1"><span class="n k-rest">1</span><span><b>{{STOP_TITLE}}</b><span class="why">{{STOP_DETAIL}}</span></span><span class="tag">{{TAG}}</span></li>
-        <li data-n="2"><span class="n k-loot">2</span><span><b>{{STOP_TITLE}}</b><span class="why">{{STOP_DETAIL}}</span></span><span class="tag">{{TAG}}</span></li>
-        <li data-n="3"><span class="n k-npc">3</span><span><b>{{STOP_TITLE}}</b><span class="why">{{STOP_DETAIL}}</span></span><span class="tag">{{TAG}}</span></li>
-        <li data-n="4"><span class="n k-boss">4</span><span><b>{{BOSS}}</b><span class="why">{{STOP_DETAIL}}</span></span><span class="tag hot">boss</span></li>
+        <li data-n="1"><span class="n k-rest">1</span><span><b>{{STOP_TITLE}}</b><span class="why">{{STOP_DETAIL}}</span></span><span class="tag">{{TAG}}</span><input type="checkbox" data-t="01-{{STOP_ID}}" aria-label="Done: {{STOP_TITLE}}"></li>
+        <li data-n="2"><span class="n k-loot">2</span><span><b>{{STOP_TITLE}}</b><span class="why">{{STOP_DETAIL}}</span></span><span class="tag">{{TAG}}</span><input type="checkbox" data-t="01-{{STOP_ID}}" aria-label="Done: {{STOP_TITLE}}"></li>
+        <li data-n="3"><span class="n k-npc">3</span><span><b>{{STOP_TITLE}}</b><span class="why">{{STOP_DETAIL}}</span></span><span class="tag">{{TAG}}</span><input type="checkbox" data-t="01-{{STOP_ID}}" aria-label="Done: {{STOP_TITLE}}"></li>
+        <li data-n="4"><span class="n k-boss">4</span><span><b>{{BOSS}}</b><span class="why">{{STOP_DETAIL}}</span></span><span class="tag hot">boss</span><input type="checkbox" data-t="01-boss" aria-label="Done: {{BOSS}}"></li>
       </ol>
       <div class="note warn"><p><strong>Lock:</strong> closes when {{BOSS}} dies: {{LOCKED_THINGS}}</p></div>
     </div>
   </section>
+</section>
+
+<!-- ================= UNTAUGHT ================= -->
+<section class="panel stack-lg" id="p-know" role="tabpanel" aria-labelledby="t-know" hidden>
+  <div class="stack">
+    <div class="sec-h"><svg class="ico" aria-hidden="true"><use href="#i-start"/></svg><h2>What the game never tells you</h2></div>
+    <p class="lede">{{KNOW_LEDE}}</p>
+  </div>
+  <!-- ranked by time saved; reassurances count ("respec is cheap, nothing here is permanent") -->
+  <ol class="steps">
+    <li><span><b>{{CLAIM}}</b><span class="why">{{CONSEQUENCE}}</span></span></li>
+  </ol>
 </section>
 
 <!-- ================= BUILD ================= -->
@@ -467,13 +514,15 @@ ol.stops .tag.hot{color:var(--danger)}
     </ol>
   </div>
 
-  <div class="stack">
-    <h3>Where to find them</h3>
+  <!-- where-list: one per budget, one row per unit (a row holding several carries data-qty="N");
+       each row's tick reuses the data-t of the stop that collects it -->
+  <div class="stack" data-ticks>
+    <h3>Where every {{BUDGET_NAME}} is <span class="count" data-count></span></h3>
     <div class="tablewrap">
-      <table>
-        <thead><tr><th>Location</th><th class="num">Count</th><th>How to get it</th></tr></thead>
+      <table data-total="{{BUDGET_COUNT}}">
+        <thead><tr><th class="ck"></th><th class="num">#</th><th>Where</th><th>How to get it</th><th>Needs</th></tr></thead>
         <tbody>
-          <tr><td class="name">{{LOCATION}}</td><td class="num">{{LOCATION_COUNT}}</td><td>{{HOW_TO_GET}}</td></tr>
+          <tr><td class="ck"><input type="checkbox" data-t="01-{{STOP_ID}}" aria-label="{{BUDGET_NAME}} 1"></td><td class="num">1</td><td class="name">{{LOCATION}} <span class="sub">Area {{AREA_ORDER}} · stop {{STOP_N}}</span></td><td>{{HOW_TO_GET}}</td><td>{{NEEDS}}</td></tr>
         </tbody>
       </table>
     </div>
@@ -618,7 +667,11 @@ ol.stops .tag.hot{color:var(--danger)}
     <div class="chapter">{{AREA_ORDER}} · {{AREA_NAME}}</div>
     <div class="quest">
       <div class="quest-head"><span class="q">{{QUEST_NAME}}</span><span class="pill hot">Before killing {{BOSS}}</span></div>
-      <p>{{QUEST_STEPS}}</p>
+      <!-- each step's tick reuses the data-t of its stop -->
+      <ol class="qsteps">
+        <li><label><input type="checkbox" data-t="01-{{STOP_ID}}"><span>{{QUEST_STEP}} <span class="by">before {{STEP_LOCK}}</span></span></label></li>
+      </ol>
+      <div class="note warn"><p><strong>Breaks if:</strong> {{QUEST_BREAKS_IF}}</p></div>
       <div class="meta"><span>Answer <b>{{QUEST_ANSWER}}</b></span><span>Reward <b>{{QUEST_REWARD}}</b></span></div>
     </div>
     <div class="quest">
@@ -677,13 +730,14 @@ ol.stops .tag.hot{color:var(--danger)}
     </ol>
   </div>
 
-  <div class="stack">
-    <h3>Trophies</h3>
+  <div class="stack" data-ticks>
+    <h3>Trophies <span class="count" data-count></span></h3>
     <div class="tablewrap">
-      <table>
-        <thead><tr><th>Trophy</th><th>Condition</th><th>Note</th></tr></thead>
+      <table data-total="{{TROPHY_COUNT}}">
+        <thead><tr><th class="ck"></th><th>Trophy</th><th>Condition</th><th>Note</th></tr></thead>
         <tbody>
-          <tr><td class="name">{{TROPHY}}</td><td>{{TROPHY_CONDITION}}</td><td><span class="pill hot">Missable</span> {{TROPHY_NOTE}}</td></tr>
+          <tr><td class="ck"><input type="checkbox" data-t="t-{{TROPHY_ID}}" aria-label="{{TROPHY}}"></td><td class="name">{{TROPHY}}</td><td>{{TROPHY_CONDITION}}</td><td><span class="pill hot">Missable</span> {{TROPHY_NOTE}}</td></tr>
+          <tr><td class="ck"><input type="checkbox" data-t="t-{{TROPHY_ID}}" aria-label="Hidden trophy"></td><td class="name"><span class="spoil" tabindex="0" role="button" aria-label="Reveal spoiler">{{HIDDEN_TROPHY}}</span></td><td>{{TROPHY_CONDITION}}</td><td>{{TROPHY_NOTE}}</td></tr>
         </tbody>
       </table>
     </div>
@@ -691,10 +745,75 @@ ol.stops .tag.hot{color:var(--danger)}
 </section>
 
 <footer>
-  <p>Sources: {{SOURCES}}. Values may shift with patches. Personal reference only.</p>
+  <details class="ticks-io">
+    <summary>Back up or move your ticks</summary>
+    <p>Ticks are saved in this browser only. Export copies them as text; paste that text here in another browser and press Import.</p>
+    <textarea rows="3" spellcheck="false" aria-label="Ticks as text"></textarea>
+    <button type="button" data-io="export">Export</button> <button type="button" data-io="import">Import</button> <span data-io-msg role="status"></span>
+  </details>
+  <p>Sources: {{SOURCES}}. Values as of patch {{PATCH}}. Personal reference only.</p>
 </footer>
 </main>
 
+<script>
+var RB = ((document.querySelector('[data-slug]') || document.body).getAttribute('data-slug') || 'run-book') + ':';
+(function(){
+  var KEY = RB + 'ticks', state = {};
+  try{ state = JSON.parse(localStorage.getItem(KEY) || '{}') || {}; }catch(e){}
+  var boxes = Array.prototype.slice.call(document.querySelectorAll('input[data-t]'));
+  function paint(){
+    boxes.forEach(function(b){
+      b.checked = !!state[b.getAttribute('data-t')];
+      var row = b.closest('li, tr');
+      if(!row) return;
+      row.classList.toggle('done', b.checked);
+      var n = row.getAttribute('data-n'), area = n && row.closest('.area');
+      var mk = area && area.querySelector('.mk[data-n="' + n + '"]');
+      if(mk) mk.classList.toggle('done', b.checked);
+    });
+    Array.prototype.forEach.call(document.querySelectorAll('[data-count]'), function(el){
+      var bs = (el.closest('[data-ticks]') || document).querySelectorAll('input[data-t]'), c = 0;
+      Array.prototype.forEach.call(bs, function(b){ if(b.checked) c++; });
+      el.textContent = c + ' / ' + bs.length;
+    });
+  }
+  function save(){ try{ localStorage.setItem(KEY, JSON.stringify(state)); }catch(e){} }
+  boxes.forEach(function(b){
+    b.addEventListener('change', function(){ state[b.getAttribute('data-t')] = b.checked; save(); paint(); });
+  });
+  paint();
+
+  var io = document.querySelector('.ticks-io');
+  if(io) io.addEventListener('click', function(e){
+    var act = e.target.getAttribute && e.target.getAttribute('data-io');
+    if(!act) return;
+    var ta = io.querySelector('textarea'), msg = io.querySelector('[data-io-msg]');
+    if(act === 'export'){
+      var done = Object.keys(state).filter(function(k){ return state[k]; });
+      ta.value = JSON.stringify({guide: RB.slice(0, -1), v: 1, done: done});
+      ta.select();
+      msg.textContent = done.length + ' ticks — copy the text';
+      return;
+    }
+    var d = null;
+    try{ d = JSON.parse(ta.value); }catch(err){}
+    if(!d || d.guide !== RB.slice(0, -1) || !Array.isArray(d.done)){ msg.textContent = 'That text is not from this run book'; return; }
+    state = {};
+    d.done.forEach(function(k){ state[k] = true; });
+    save(); paint();
+    msg.textContent = 'Imported ' + d.done.length + ' ticks';
+  });
+
+  function reveal(e){
+    var s = e.target.closest && e.target.closest('.spoil');
+    if(!s || (e.type === 'keydown' && e.key !== 'Enter' && e.key !== ' ')) return;
+    if(e.type === 'keydown') e.preventDefault();
+    s.classList.toggle('open');
+  }
+  document.addEventListener('click', reveal);
+  document.addEventListener('keydown', reveal);
+})();
+</script>
 <script>
 (function(){
   var tabs = Array.prototype.slice.call(document.querySelectorAll('.tab'));
@@ -706,7 +825,7 @@ ol.stops .tag.hot{color:var(--danger)}
       if(panel) panel.hidden = !on;
     });
     tab.focus();
-    try{ localStorage.setItem('run-book-tab', tab.id); }catch(e){}
+    try{ localStorage.setItem(RB + 'tab', tab.id); }catch(e){}
   }
   tabs.forEach(function(tab, i){
     tab.addEventListener('click', function(){ select(tab); window.scrollTo({top:0, behavior:'smooth'}); });
@@ -718,7 +837,7 @@ ol.stops .tag.hot{color:var(--danger)}
     });
   });
   try{
-    var saved = localStorage.getItem('run-book-tab');
+    var saved = localStorage.getItem(RB + 'tab');
     var t = saved && document.getElementById(saved);
     if(t){ select(t); }
   }catch(e){}
@@ -734,7 +853,7 @@ ol.stops .tag.hot{color:var(--danger)}
     areas.forEach(function(a){ var on = a.getAttribute('data-area') === id; a.hidden = !on; found = found || on; });
     if(!found) return show(here);
     pick.value = id;
-    try{ localStorage.setItem('run-book-area', id); }catch(e){}
+    try{ localStorage.setItem(RB + 'area', id); }catch(e){}
   }
   function step(d){
     var i = pick.selectedIndex + d;
@@ -744,7 +863,7 @@ ol.stops .tag.hot{color:var(--danger)}
   document.getElementById('area-prev').addEventListener('click', function(){ step(-1); });
   document.getElementById('area-next').addEventListener('click', function(){ step(1); });
   var saved = null;
-  try{ saved = localStorage.getItem('run-book-area'); }catch(e){}
+  try{ saved = localStorage.getItem(RB + 'area'); }catch(e){}
   show(saved || here);
 
   // marker <-> stop row highlight, scoped to one area

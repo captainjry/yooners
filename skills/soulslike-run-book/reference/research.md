@@ -9,6 +9,11 @@ Counts and lock triggers are where sources drift apart between patches. Confirm 
 second source. When two disagree, carry both onto the page with a safe instruction ("sources
 say 4 or 5 — open all 5"), as the player cannot check mid-run.
 
+Every number on the page comes from a source. Where a new or small game has none for a count,
+the page says "nobody has counted these yet" in that slot and the run book ships smaller. When
+a source gives a total and a list, add the list up: a "16 locations" list that sums to 15
+usually means one place holds two.
+
 Scope everything to the intake answers: DLC content only when DLC is in; NG+ content only as
 "comes back in NG+".
 
@@ -29,8 +34,10 @@ Fill each, or write "this game has none".
 4. **Quests.** Every NPC questline, step by step with locations, the dialogue answer where one
    matters, the rewards, and the lock that ends it. Note quests that cross areas and quests
    that conflict.
-5. **Budgets.** Every capped resource: total per run, each location, what it buys, and the
-   full cost of buying everything, so the page can show the budget against the cost.
+5. **Budgets.** Every capped resource: total per run, what it buys, and the full cost of
+   buying everything, so the page can show the budget against the cost. Then each unit on its
+   own: where it is, how it is obtained (found, bought, quest reward, boss drop), and what it
+   needs first (a key, an ability, an event).
 6. **Forks.** Every one-way choice: both outcomes, what each costs elsewhere, and whether the
    other side returns in NG+.
 7. **Build lines.** The game's scaling stats or styles; per line the best weapons with where
@@ -41,10 +48,19 @@ Fill each, or write "this game has none".
 9. **Endings.** Every ending, the decisions and thresholds that select it, where each decision
    happens, and the latest save point that still reaches all of them.
 10. **Achievements.** The full list with a missable flag on each, the minimum number of runs,
-    the save-backup points that reduce it, and post-game tasks that must precede NG+.
+    the save-backup points that reduce it, and post-game tasks that must precede NG+. Use the
+    list for the player's platform; Steam, PlayStation and Xbox lists differ.
+11. **Untaught mechanics.** What the game mentions once or never: hidden stats, dialogue that
+    must be exhausted, what resting resets, what death costs. Sources: "things I wish I knew"
+    threads, beginner-mistake lists, mixed reviews describing what confused people. Keep what
+    the tutorial leaves out, including reassurances (respec is cheap, nothing here is
+    permanent).
+12. **Before the first save** (position "not started" only). Starting class and gift,
+    difficulty or mode, settings worth fixing once, save-slot options; for each, whether it
+    can change later.
 
 ## Completion
 
-Every lock has a trigger. Every budget has a total and a location for each unit. Every
+Every lock has a trigger. Every budget has a total and a row for each unit that sum to it. Every
 missable in categories 4, 8 and 10 names the lock that closes it. Every area in category 1
 has a walking order in category 2.

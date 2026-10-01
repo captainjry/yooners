@@ -9,7 +9,7 @@ under `skills/` with a `SKILL.md` (the instructions an agent follows) and its ow
 |---|---|
 | [dji-vlog-series](skills/dji-vlog-series) | Turn a folder of raw camera clips into a multi-episode travel-vlog series plus a vertical teaser: indexing, storyboard, cut lists, ffmpeg renders, QC, and a YouTube upload sheet. |
 | [social-reel](skills/social-reel) | Cut a vertical Reel/Short from existing footage in the style of a reference reel: shot survey, 9:16 crop, static lockup, embedded bed or silent render for a platform sound. |
-| [soulslike-run-book](skills/soulslike-run-book) | Build a one-page HTML run book for a soulslike, themed after the game: a map per area with numbered stops from where you stand, missable quests and loot, what locks at each boss, capped upgrade budgets, endings, and the 100% achievement roadmap. |
+| [soulslike-run-book](skills/soulslike-run-book) | Build a one-page HTML run book for a soulslike, themed after the game: a map per area with numbered, tickable stops from where you stand, missable quests and loot, what locks at each boss, capped upgrade budgets with every unit located, endings, and the 100% achievement roadmap. |
 
 ## Install
 
