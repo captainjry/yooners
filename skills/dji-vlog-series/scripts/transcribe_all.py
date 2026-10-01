@@ -23,6 +23,8 @@ AP.add_argument("--model", default="large-v3")
 AP.add_argument("--device", default="cuda")
 AP.add_argument("--compute-type", default="float16")
 AP.add_argument("--language", default="", help="force a language; empty = detect per clip")
+AP.add_argument("--task", default="transcribe", choices=["transcribe", "translate"],
+                 help="faster-whisper task; 'translate' always outputs English")
 AP.add_argument("--first", default="", help="filename prefix to transcribe first (e.g. the last day)")
 AP.add_argument("--ffmpeg", default="ffmpeg")
 A = AP.parse_args()
@@ -57,7 +59,7 @@ for i, f in enumerate(files, 1):
             str(wav), vad_filter=True, word_timestamps=True, beam_size=5,
             # a vlog is not one continuous narrative: conditioning carries hallucinated text
             # from one unrelated clip into the next
-            condition_on_previous_text=False,
+            condition_on_previous_text=False, task=A.task,
             **({"language": A.language} if A.language else {}))
         out = [{"start": round(s.start, 2), "end": round(s.end, 2), "text": s.text.strip(),
                 "no_speech_prob": round(s.no_speech_prob, 3),

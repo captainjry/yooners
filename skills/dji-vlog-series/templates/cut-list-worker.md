@@ -1,6 +1,7 @@
 # Cut-list worker brief
 
-Dispatch one subagent per episode with this brief plus that episode's approved storyboard cards.
+Dispatch one subagent per episode (per chapter of a film) with this brief plus that unit's
+approved storyboard cards.
 
 ---
 
@@ -33,7 +34,8 @@ Write `clip-review/eNN.json` with this shape:
       "card": "e01-1-travel-in",
       "shots": [
         {"file": "<clip>.MP4", "in": 12.4, "out": 18.9, "why": "clear line: <gist>",
-         "audio": "keep|duck|music-only", "quote": "verbatim if kept", "lang": "th"}
+         "audio": "keep|duck|music-only", "quote": "verbatim if kept", "lang": "th",
+         "subtitles": true}
       ],
       "beat_seconds": 62
     }
@@ -62,4 +64,5 @@ Write `clip-review/eNN.json` with this shape:
 - Timestamps are seconds from clip start, at 1x, in the original file.
 - Mark each shot `"verified": true` when you looked at a thumbnail or still at that in-point, and
   `false` when the pick rests on index text alone; the editor frame-checks the `false` ones.
+- `"subtitles"` (optional, default `true`): set `false` to suppress subtitle cues for a shot whose transcript is unreliable.
 - Keep notes short: the JSON plus a five-line summary printed at the end.

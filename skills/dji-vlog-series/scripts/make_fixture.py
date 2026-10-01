@@ -18,6 +18,7 @@ AP.add_argument("--fonts", default="", help="directory holding the sans/mono TTF
 AP.add_argument("--fps", type=int, default=25)
 AP.add_argument("--size", default="1080p", choices=["1080p", "4k"], help="clip and canvas size")
 AP.add_argument("--beats", type=int, default=2, help="beats in the cut list (3 shots each)")
+AP.add_argument("--film", action="store_true", help='write format "film" (one long film) instead of a series')
 A = AP.parse_args()
 
 OUT = Path(A.out).resolve()
@@ -109,7 +110,7 @@ json.dump({
     "project": str(OUT).replace("\\", "/"),
     "cut_lists": "clip-review", "stamps": "stamps.json", "frame_index": "frame-index.json",
     "proxies": "proxies", "output": "out", "layers": "layers",
-    "slug": "fixture", "lang": "en", "fps": A.fps, "canvas": [W, H], "handle": 1.0,
+    "slug": "fixture", "format": "film" if A.film else "series", "lang": "en", "fps": A.fps, "canvas": [W, H], "handle": 1.0,
     "episodes": {"01": {"title": "A fixture episode, rendered end to end", "batch": "6 SEP"}},
     "bed": {"01": "fixture-bed"}, "bed_dir": "bgm", "bed_ext": ".m4a",
     "bed_title_level": 0.45, "bed_ramp": 0.6,

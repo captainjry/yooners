@@ -1,0 +1,30 @@
+{
+  "name": "yooners",
+  "owner": {
+    "name": "captainjry"
+  },
+  "metadata": {
+    "description": "Agent skills by captainjry: travel-vlog editing and soulslike run books."
+  },
+  "plugins": [
+    {
+      "name": "vlog",
+      "description": "Turn raw camera clips into a multi-episode travel-vlog series or one long film (dji-vlog-series), and cut a vertical Reel/Short from the same footage (social-reel).",
+      "source": "./",
+      "strict": false,
+      "skills": [
+        "./skills/dji-vlog-series",
+        "./skills/social-reel"
+      ]
+    },
+    {
+      "name": "soulslike",
+      "description": "Build a one-page HTML run book for a soulslike: a map per area with numbered stops, missables, locks, budgets, forks, endings and the 100% roadmap.",
+      "source": "./",
+      "strict": false,
+      "skills": [
+        "./skills/soulslike-run-book"
+      ]
+    }
+  ]
+}

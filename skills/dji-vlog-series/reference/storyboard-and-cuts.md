@@ -19,8 +19,14 @@ Shape the strip:
   the target, propose the honest shorter number and say why. Padding, looping and slow motion to
   hit a minimum all read as filler in a diary series.
 
-Episode split decisions worth settling here: one episode per meaningful day; outbound travel folds
-into episode 1 and the return into the last episode rather than standing as travel extras.
+The episode split was settled at intake (`reference/intake.md`, round 2): one episode per
+meaningful day, outbound travel folded into episode 1 and the return into the last.
+
+**A film** is one `proposed_episodes` entry, `"01"`, whose beats run the whole trip. Group them
+into **chapters** (a day, or a place, as intake settled): each chapter keeps the 3–6 beat shape,
+the film opens on people in its first chapter and closes in its last. Name each card
+`e01-<n>-<chapter>-<moment>` so the chapter reads off the card; the beats become the YouTube
+chapters.
 
 ## Presenting the board
 
@@ -45,7 +51,9 @@ The gate is editorial approval of the strip. Steps 5–8 build exactly this stri
 ## 5. Cut lists
 
 One subagent per episode, dispatched in parallel, each with `templates/cut-list-worker.md` plus
-its episode's cards. A capable mid-tier model does this well; the judgement is bounded by the
+its episode's cards. For a film, dispatch one worker per chapter with that chapter's cards; each
+returns its `beats`, `human_audio_moments`, `captions_candidates` and `flags`, and you join them
+in strip order into the one `e01.json`, summing `episode_seconds`, before the check below. A capable mid-tier model does this well; the judgement is bounded by the
 approved cards.
 
 Each worker writes `<review>/clip-review/eNN.json`:

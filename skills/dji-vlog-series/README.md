@@ -17,7 +17,7 @@ storyboard, and locking the cut before the final renders. Uploading stays with y
 
 ```
 SKILL.md       the workflow: 12 steps, each with a completion criterion
-reference/     detail for each stage (footage index, storyboard & cuts, build, render, QC, publish)
+reference/     detail for each stage (intake interview, footage index, storyboard & cuts, build, render, QC, publish)
 scripts/       the tools (Python and POSIX sh); run any with --help or read its header
 templates/     BRIEF.md, HANDOFF.md, cut-list worker brief, series.json config
 ```
@@ -41,17 +41,26 @@ python scripts/build_episodes.py --config /tmp/fixture/series.json --draft   # m
 
 ## Install
 
+Claude Code, as a plugin (brings `social-reel` with it):
+
+```
+/plugin marketplace add captainjry/yooners
+/plugin install vlog@yooners
+```
+
+Other agents:
+
 ```sh
 npx skills add captainjry/yooners --skill dji-vlog-series -g -a <agent>
 ```
 
-`<agent>` is `claude-code`, `codex`, `cursor`, `gemini-cli`, `github-copilot`, `opencode`,
-`windsurf`, or any other agent the CLI supports; list several to install for each. Omit `-g` to scope
-it to the current project. See the [root README](../../README.md#install) for skills folders and a
-manual install without Node.
+`<agent>` is `codex`, `cursor`, `gemini-cli`, `github-copilot`, `opencode`, `windsurf`, or any
+other agent the CLI supports; list several to install for each. Omit `-g` to scope it to the
+current project. See the [root README](../../README.md#install) for skills folders and a manual
+install without Node.
 
 Then ask your agent to "turn this footage folder into a vlog series". In Claude Code you can also type
-`/dji-vlog-series`.
+`/vlog:dji-vlog-series`.
 
 ### Agents other than Claude Code
 

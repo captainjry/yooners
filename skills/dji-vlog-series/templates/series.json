@@ -1,5 +1,5 @@
 {
-  "_readme": "Config for scripts/build_episodes.py and scripts/build_thumbnails.py. Copy to the project root, fill in, and pass with --config. Relative paths resolve against this file. Text sizes in `design` are canvas pixels tuned for 4K; set text_scale 0.5 for 1080p.",
+  "_readme": "Config for scripts/build_episodes.py and scripts/build_thumbnails.py. Copy to the project root, fill in, and pass with --config. Relative paths resolve against this file. Text sizes in `design` are canvas pixels tuned for 4K; set text_scale 0.5 for 1080p. `format` is \"series\" (numbered episodes) or \"film\" (one long film: exactly one entry in `episodes`, no episode numbers on the title card, thumbnail or file name; for a film set text.thumb_eyebrow to the series line or delete it).",
 
   "project": ".",
   "cut_lists": "../<project>-review/clip-review",
@@ -9,6 +9,7 @@
   "output": "../<project>-media/final",
 
   "slug": "Series-2026",
+  "format": "series",
   "lang": "en",
   "fps": 25,
   "canvas": [1920, 1080],
@@ -53,5 +54,16 @@
     "end_last_sub": "<SERIES> · <MONTH YEAR> · THE END",
     "credit": "MUSIC · <ARTIST> (<SOURCE>) · <LICENCE>",
     "thumb_eyebrow": "<SERIES> · EP.{n} OF {total}"
+  },
+
+  "subtitles": {
+    "_readme": "Per-series rules for scripts/build_subtitles.py. speech_script: the script the speech is written in (thai, kana, cjk, hangul, cyrillic, arabic, devanagari), or \"\" when the speech is in Latin script. drop_scripts: scripts that never occur in this footage, so a cue containing one is an ASR hallucination (a Thai series abroad: [\"cyrillic\", \"latin-ext\"]). keep_words: Latin words that are real when glued onto the speech script; place-stamp words are added automatically. fixes: {\"wrong regex\": \"right\"} for known ASR errors.",
+    "speech_script": "",
+    "drop_scripts": [],
+    "keep_words": ["Lake", "Sunset", "Day", "Peace", "Set", "View", "Top", "Hill", "Park", "Pond", "Field", "Sea", "Snow", "Beer", "Fish", "Food", "Camp", "Tower", "Terrace", "Waterfall", "Aquarium", "Zoo", "Ropeway", "Observatory", "Market", "Village", "Airbnb", "Youtube"],
+    "fixes": {},
+    "max_cue": 6.0,
+    "max_no_speech": 0.6,
+    "max_chars": 70
   }
 }

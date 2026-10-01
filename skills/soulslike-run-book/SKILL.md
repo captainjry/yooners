@@ -3,9 +3,8 @@ name: soulslike-run-book
 description: >
   Build a run book: a one-page HTML game guide for a soulslike (Elden Ring, Sekiro, Dark Souls,
   Bloodborne, Lies of P and kin) that navigates the player area by area from where they stand
-  now — a map per area with numbered, tickable stops, missable quests and loot, what locks at
-  each boss, capped upgrade budgets with every unit located, one-way forks, endings, and the
-  100% achievement roadmap. Use when the user asks for a guide, navigator, map, walkthrough or
+  now — a map per area with numbered stops, missable quests and loot, what locks at each boss,
+  capped upgrade budgets, one-way forks, endings, and the 100% achievement roadmap. Use when the user asks for a guide, navigator, map, walkthrough or
   missables list for such a game, wants a 100% / platinum plan, or reports a new position in an
   existing run book ("I just beat the Capra Demon").
 ---
@@ -32,9 +31,9 @@ opening comment lists them. The page's structure and its look are decided per ga
   spend order.
 - **Fork** — a one-way choice (boss-soul trade, covenant, quest answer, ending decision). Every
   fork shows both sides and the pick.
-- **Tick** — a checkbox the player owns, saved in their browser. One thing has one tick id for
-  the life of the page; where the thing shows twice (a stop and its where-list row, a stop and
-  its quest step) both boxes carry that id and move together. A ticked stop dims on the map.
+- **Tick** — a checkbox the player owns, saved in their browser. One thing has one tick id,
+  `<area>-<short-name>` (`03-ember`), for the life of the page; where the thing shows twice (a
+  stop and its where-list row, a stop and its quest step) both boxes carry that id.
 - **Your run** — a `.note.info` callout opening `<strong>Your run:</strong>`. All
   player-specific text lives in these and in the Now tab; the rest of the page is true for any
   player. This split is what makes a position update a small edit.
@@ -61,8 +60,7 @@ whole instruction: "Give the third boss's soul to the smith", with only the name
 2. **Research.** → `reference/research.md`. The categories are independent; hand them to
    parallel workers when the agent has them.
    *Done when* every category in that file is filled or marked "this game has none", every
-   number on its way to the page has a source, every count has two agreeing sources or a
-   stated disagreement, and every lock has a trigger.
+   count has two agreeing sources or a stated disagreement, and every lock has a trigger.
 
 3. **Commit the plan.** Choose for the player, once: one build line, one spend order per budget
    that adds up to the budget's total, one pick per fork, one ending route per run, one area
@@ -83,9 +81,8 @@ whole instruction: "Give the third boss's soul to the smith", with only the name
    changes are applied.
 
 5. **Write the stops.** For every area in the plan's order: the stops in walking order, each
-   one line with a landmark the player can see, the thing to do there, and what it is for, and
-   each with a tick whose id is `<area>-<short-name>` (`03-ember`). Optional detours are marked
-   with where they rejoin. The last stop is the boss or exit; under the list, a lock note names
+   one line with a landmark the player can see, the thing to do there, and what it is for,
+   each with its tick. Optional detours are marked with where they rejoin. The last stop is the boss or exit; under the list, a lock note names
    everything that boss or exit closes. A hub area also carries a "Go now" exit and the "Later"
    exits to leave alone.
    *Done when* every missable item, quest step, NPC and budget unit from the research appears
@@ -99,26 +96,21 @@ whole instruction: "Give the third boss's soul to the smith", with only the name
    rendered page.
 
 7. **Write the Now tab.** From the current position: "Do now, before <next lock>", "Catch-up
-   check — still fixable", "Right after <next lock>", and "Already locked" stated plainly. For
-   a run not started, open with "Before the first save": each pre-game choice, the pick, and
-   whether it can change later, locked rows first.
+   check — still fixable", "Right after <next lock>", and "Already locked" stated plainly. A
+   run not started opens with "Before the first save".
    *Done when* a player who reads only this tab can play to the next lock and lose nothing.
 
 8. **Fill the reference tabs** for this game's systems: build, budgets, forks, quests, endings,
-   achievements, the untaught mechanics, and whatever else the game has.
-   - Each budget's where-list has one row per unit (where, how, what it needs first), each row
-     ticked with its stop's id.
-   - Each quest is an ordered list of steps, each step ticked with its stop's id and carrying
-     its lock, plus one "Breaks if" line.
-   - Untaught mechanics are ranked by the time they save, a claim and its consequence each.
-   - Add a `figure` diagram where a rule is structural (a loop, a window, a fork, a budget
-     against its cost). Put a "Your run" callout under every section the plan touches.
-   *Done when* every where-list has as many rows as its budget's total, and every achievement
-   flagged missable points at the stop, quest or fork that earns it.
+   achievements, the untaught mechanics, and whatever else the game has, each shaped as its
+   kit panel shows. Add a `figure` diagram where a rule is structural (a loop, a window, a
+   fork, a budget against its cost). Put a "Your run" callout under every section the plan
+   touches.
+   *Done when* every where-list has as many rows as its budget's total, every quest step and
+   where-list row carries its stop's tick, and every achievement flagged missable points at
+   the stop, quest or fork that earns it.
 
-9. **Check the page.** Run `python scripts/check_run_book.py <file>` until it prints `clean`:
-   it covers leftover placeholders, the slug, stop and marker numbering, marker spacing, map
-   classes, tick ids and where-list totals. Then render the page once in a browser: every tab
+9. **Check the page.** Run `python scripts/check_run_book.py <file>` until it prints `clean`.
+   Then render the page once in a browser: every tab
    switches, the area picker steps through all areas, a tick survives a reload, nothing scrolls
    sideways at phone width, light and dark both read. Then read the Now tab and the current
    area against the research once more — a wrong lock costs the player a run.
@@ -143,8 +135,8 @@ when the user pastes them (footer, "Back up or move your ticks" → Export), the
 4. Draw the maps for the next stretch of areas (step 6).
 5. Re-run step 3's check if the user changed build, picked a fork differently, or missed a
    budget item.
-6. Keep every existing tick id as it is, so the player's saved ticks still match. Save over
-   the same file and run step 9's script; republish only if it was published before.
+6. Save over the same file, every tick keeping its id; republish only if it was published
+   before.
 
 *Done when* no callout speaks of a dead boss as alive, the Now tab's first list starts from
 the new position, the current area and the ones up to the next milestone have maps, and the

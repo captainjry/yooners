@@ -40,4 +40,9 @@ Keep names consistent across the sheet, the end cards and the channel. If the se
 after the episodes render, the end cards keep the old name — say so plainly rather than
 re-rendering ten 4K episodes for a title.
 
+A film gets the same three blocks once: the title carries no `EP.N`, the header drops the
+playlist and the "next video" end screen, and the files are `<Series>.mp4` and `<Series>.jpg`.
+Its chapter timestamps do the work the episode list does for a series, so check each one lands
+on its beat's first frame.
+
 Append the teaser's own block at the end of the same file (`social-reel`, `reference/audio-modes.md`).

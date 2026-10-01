@@ -62,6 +62,9 @@ LAYERS = path("layers") if CFG.get("layers") else PROJ / "layers"
 FPS = CFG.get("fps", 25)
 CANVAS_W, CANVAS_H = CFG.get("canvas", [1920, 1080])
 SLUG = CFG.get("slug", "series")
+FORMAT = CFG.get("format", "series")   # "series" = numbered episodes, "film" = one long film
+if FORMAT not in ("series", "film"): sys.exit(f'format must be "series" or "film", got {FORMAT!r}')
+FILM = FORMAT == "film"
 VOL = CFG.get("shot_volume", {"keep": 1.0, "duck": 0.6, "music-only": 0.3})
 BED_LEVEL = CFG.get("bed_level", {"keep": 0.10, "duck": 0.20, "music-only": 0.45})
 BED = CFG.get("bed", {})
@@ -74,12 +77,14 @@ TITLE_HOLD = CFG.get("title_hold", 4.2)
 LABEL_HOLD = CFG.get("stamp_hold", 3.2)
 END_HOLD = CFG.get("end_hold", 3.0)
 EP = CFG["episodes"]
+if FILM and len(EP) != 1: sys.exit('format "film" takes exactly one entry in `episodes`')
 TEXT = CFG.get("text", {})
 SERIES_LINE = TEXT.get("series_line", "SERIES · DATE")
 FIRST_SERIES_LINE = TEXT.get("first_series_line", SERIES_LINE)
 END_LAST = TEXT.get("end_last", "The end.")
 END_LAST_SUB = TEXT.get("end_last_sub", SERIES_LINE + " · THE END")
 END_SUB_FMT = TEXT.get("end_sub", "{batch} · " + SERIES_LINE)
+TITLE_SUB_FMT = TEXT.get("title_sub", "{batch} · {stamp}" if FILM else "EPISODE {ep:02d} · {batch} · {stamp}")
 CREDIT = TEXT.get("credit", "")
 HANDLE = CFG.get("handle", 1.0)
 END_FRAMES = int(round(END_HOLD * FPS))
@@ -256,7 +261,7 @@ def plan(ep, lo=None, hi=None):
         "bed": bed_file(ep), "bed_from": bed_from,
         "bed_pts": slice_env(pts, bed_from, bed_from + total) if partial else pts,
         "title": {"eyebrow": series_line, "title": meta["title"],
-                  "sub": f"EPISODE {int(ep):02d} · {meta.get('batch','')} · {first_stamp.upper()}"},
+                  "sub": TITLE_SUB_FMT.format(ep=int(ep), batch=meta.get("batch", ""), stamp=first_stamp.upper())},
         "end": {"big": END_LAST if is_last else f"Episode {int(ep):02d}",
                 "small": END_LAST_SUB if is_last else END_SUB_FMT.format(batch=meta.get("batch", ""), ep=int(ep)),
                 "credit": CREDIT},
@@ -551,7 +556,7 @@ def episode(ep):
     outdir = DRAFTDIR if A.draft else OUTDIR
     outdir.mkdir(parents=True, exist_ok=True)
     tag = f"-b{P['lo']}-{P['hi']}" if A.beats else ""
-    name = f"{SLUG}-E{ep}{tag}{'-draft' if A.draft else ''}.mp4"
+    name = f"{SLUG}{'' if FILM else '-E' + ep}{tag}{'-draft' if A.draft else ''}.mp4"
     outfile = outdir / name
     stem = outdir / f"e{ep}{tag}{'-draft' if A.draft else ''}"
     chapters = {"episode": ep, "beats": [{"card": r_["card"], "start_seconds": round(r_["start"], 3),

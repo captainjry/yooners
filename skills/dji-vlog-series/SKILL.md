@@ -2,14 +2,16 @@
 name: dji-vlog-series
 description: >
   Turn a folder of raw camera clips (DJI, phone, action cam) into a multi-episode travel-vlog
-  series plus its vertical teaser. Use to plan, cut, render, QC, or re-render such a series:
+  series or one long film, plus its vertical teaser. Use to plan, cut, render, QC, or re-render one:
   footage indexing, per-episode cut lists, proxies, ffmpeg episode renders with Pillow text
   layers, contact-sheet and loudness QC, and the YouTube upload sheet.
 ---
 
 # DJI vlog series
 
-Take a card of raw clips to N finished episodes and one teaser. Proven on 168 clips (3.1 h) →
+Take a card of raw clips to N finished episodes, or one **film**, and one teaser. A film is a
+series of one: episode `01` holds every beat, and `"format": "film"` in `series.json` takes the
+episode number off the title card, the thumbnail and the file name. Proven on 168 clips (3.1 h) →
 ten 4K episodes + a 39 s short, and on 89 clips (29 min) → two 4K episodes + a 20 s reel.
 
 The toolchain is ffmpeg, ffprobe, Python (Pillow, faster-whisper) and a POSIX shell. A diary
@@ -27,12 +29,14 @@ finals, `<source>` = the read-only originals.
 
 Work top to bottom. Two human gates (steps 4 and 8) stop the run until the user answers.
 
-1. **Intake and metadata scan.** Ask which files on the card are the series (a card usually holds
-   several shoots as filename-date prefixes), the trip name and slug, and the dates. Then ffprobe
-   every source file into `source-metadata.json`; settle codec, fps, rotation tags, total runtime.
-   *Done when* every source file appears in the JSON and the user has confirmed the prefix set,
-   the name and the date range.
-   → `reference/footage-index.md`, `scripts/scan_footage.py`
+1. **Metadata scan and intake interview.** ffprobe every source file into
+   `source-metadata.json`; settle codec, fps, rotation tags, raw seconds per day. Then run the
+   interview's rounds 1 and 2: which shoots are this trip, series or film, name and dates,
+   audience, delivery, split and runtimes, look, music, teaser, privacy. Rounds 3 and 4 open
+   after steps 2 and 3.
+   *Done when* every source file appears in the JSON, and the interview's frontier is empty for
+   rounds 1 and 2 with each answer in `series.json` or `BRIEF.md`.
+   → `reference/intake.md`, `reference/footage-index.md`, `scripts/scan_footage.py`
 
 2. **Visual index and contact sheets.** Extract three frames per clip, tile them into sheets,
    and look at every sheet. Write one `complete-visual-index.json` row per clip: scene, human
@@ -45,15 +49,15 @@ Work top to bottom. Two human gates (steps 4 and 8) stop the run until the user 
    *Done when* `transcripts/_index.json` covers every clip and reports a language per clip.
    → `reference/footage-index.md`, `scripts/transcribe_all.py`
 
-4. **Storyboard beat strip — gate.** One card per **beat** (3–6 beats per episode: open on
-   people, middle beats, close), each backed by a real extracted still logged in
+4. **Storyboard beat strip — gate.** One card per **beat** (3–6 beats per episode, or per
+   chapter of a film: open on people, middle beats, close), each backed by a real extracted still logged in
    `storyboard-provenance.json`. Propose honest runtimes from raw seconds per day. The strip is
    one self-contained `strip.html`; present it and the cards in the reply, card by card.
    *Done when* the user approves the strip card by card; retired cards move to `retired-cards/`.
    → `reference/storyboard-and-cuts.md`, `scripts/build_storyboard.py`
 
-5. **Cut lists.** Dispatch one subagent per episode with the worker brief; each writes
-   `clip-review/eNN.json` (beats → shots with in/out/why/audio/quote). Validate each with
+5. **Cut lists.** Dispatch one subagent per episode (per chapter of a film, merged into
+   `e01.json`) with the worker brief; each writes `clip-review/eNN.json` (beats → shots with in/out/why/audio/quote). Validate each with
    `scripts/check_cut_list.py`, then frame-verify the anchor shots.
    *Done when* every episode's list passes the validator and its `flags` list is empty or
    explained.
@@ -70,7 +74,8 @@ Work top to bottom. Two human gates (steps 4 and 8) stop the run until the user 
    per episode and let the user pick; write evidence-backed place **stamps**; build subtitle
    sidecars; draw thumbnails with the same text renderer as the video.
    *Done when* each episode has a user-chosen bed, every beat has a stamp or a deliberate `null`,
-   each episode has an SRT and a thumbnail, and the music credit sits on the end card.
+   the `subtitles` block of `series.json` is filled for this series, each episode has an SRT
+   and a thumbnail, and the music credit sits on the end card.
    → `reference/build.md`, `scripts/build_subtitles.py`, `scripts/build_thumbnails.py`
 
 8. **Draft and lock — gate.** Render every episode as a half-canvas draft (1080p from a 4K
@@ -105,8 +110,12 @@ Work top to bottom. Two human gates (steps 4 and 8) stop the run until the user 
 
 - Read the originals; write elsewhere. Every derived artefact lands in `<review>` or `<media>`.
 - Report **rendered** and **uploaded** as separate columns; the user owns uploading.
-- Generated files are regenerated, never hand-edited: the cut list is the single source of
-  timing, `series.json` the single source of design and text.
+- Two single sources: the cut list for timing, `series.json` for everything else about one
+  series (design, text, language, place names, ASR fixes, thresholds). To change an output,
+  change its source and regenerate.
+- The scripts are **generic**: one copy serves every series. When a series needs something a
+  script lacks, add a `series.json` key the script reads, defaulting to the old behaviour;
+  cover the key in the script's `--selftest`; report the skill change to the user.
 - Keep a decision log at the bottom of `BRIEF.md`: one dated line per decision, newest last.
   It is the single source of truth for what happened across sessions.
   → `templates/BRIEF.md`

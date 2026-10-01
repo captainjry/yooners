@@ -57,7 +57,9 @@ under `<project>/assets/bgm-candidates/<slot>/` with a `CANDIDATES.md` (title, a
 licence, exact credit line, duration, why it fits). Give the user the folder path to audition and
 wait for one name per slot. Then `loudnorm I=-20 LUFS` the pick, encode AAC into `assets/bgm/`,
 write `CREDITS.txt` naming every track, and set `bed` and `text.credit` in `series.json`. The
-renderer loops the bed (`-stream_loop -1`), so a track shorter than the episode is fine.
+renderer loops the bed (`-stream_loop -1`), so a track shorter than the episode is fine. A film
+runs long enough for a loop to be heard: join the user's picks, in chapter order, into one bed
+file at least as long as the film.
 
 Bed level is one piecewise-linear `volume` envelope the renderer draws over the whole episode:
 `bed_title_level` across the opening, then each shot's level by its cut-list `audio` mode
@@ -71,10 +73,12 @@ Use evidence-backed names only — signage in frame, a leaflet, or the name said
 the user to fill the rest. Naming a place the footage cannot support is the one caption error
 viewers who were there will catch.
 
-**Captions.** `python scripts/build_subtitles.py --cut-lists <review>/clip-review --transcripts
+**Captions.** `python scripts/build_subtitles.py --config <project>/series.json --transcripts
 <review>/transcripts --out <project>/renders/subtitles --lang th` remaps source transcripts through
 the cut into SRT sidecars — not burned in, so YouTube can translate them and the picture stays
-clean. Carry the series' known ASR errors as repeated `--fix "wrong=>right"` flags.
+clean. Fill the `subtitles` block of `series.json` first: the script the speech is written in,
+the scripts that never occur in this footage, the Latin words that are real, and the series'
+known ASR errors under `fixes`. A bad cue in the SRT is cured there and the SRT regenerated.
 
 **Thumbnails.** `python scripts/build_thumbnails.py --config series.json --map thumbnails.json
 --out <media>/final/thumbnails` draws a storyboard still plus the episode title through the same
