@@ -106,6 +106,11 @@ Work top to bottom. Two human gates (steps 4 and 8) stop the run until the user 
     lists, `human_audio_moments` and the proxies directly) and the audio mode the user wants.
     *Done when* that skill reports the reel rendered and its upload block sits in `YOUTUBE.txt`.
 
+## Optional: timeline review
+
+The user asks to drag cuts by hand and FilmCraft is already installed → `reference/timeline-review.md`.
+Every other run takes cut changes as timecodes in chat.
+
 ## Standing rules
 
 - Read the originals; write elsewhere. Every derived artefact lands in `<review>` or `<media>`.

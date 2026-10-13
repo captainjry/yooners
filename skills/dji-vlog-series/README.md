@@ -30,6 +30,10 @@ templates/     BRIEF.md, HANDOFF.md, cut-list worker brief, series.json config
   CUDA GPU recommended), `librosa` and `numpy` (teaser tempo measurement)
 - A POSIX shell for the `.sh` scripts (Git Bash works on Windows)
 
+That is the whole toolchain. One optional extra: with
+[FilmCraft](https://github.com/storytold/filmcraft) 0.7.2+ installed and `FILMCRAFT_CLI` pointing
+at its `filmcraft-cli`, you can drag cuts on a timeline (`reference/timeline-review.md`).
+
 ## Self-test
 
 Prove the render toolchain on any machine in under a minute, with no footage:
